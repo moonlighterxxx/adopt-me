@@ -1,17 +1,76 @@
-/* style.css */
 body {
+  margin: 0;
   font-family: Arial, sans-serif;
-  padding: 20px;
-  background: #1c1c1c;
+  background-color: #1e2a38;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.container {
+  text-align: center;
+  width: 90%;
+  max-width: 600px;
+}
+
+.logo {
+  width: 200px;
+  margin: 20px auto;
+  display: block;
+}
+
+input[type="text"] {
+  padding: 10px;
+  font-size: 16px;
+  width: 80%;
+  margin-top: 10px;
+}
+
+button {
+  padding: 10px 20px;
+  font-size: 16px;
+  margin-top: 10px;
+  cursor: pointer;
+}
+
+#feedback {
+  margin-top: 20px;
+}
+
+.guess-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+  align-items: center;
+  justify-content: center;
+}
+
+.guess-cell {
+  padding: 10px;
+  min-width: 80px;
+  text-align: center;
+  border-radius: 5px;
+  background-color: #444;
   color: white;
 }
 
-input, button {
-  font-size: 1em;
-  padding: 10px;
-  margin: 10px;
+.correct {
+  background-color: green;
 }
 
-#feedback p {
-  margin: 5px 0;
+.partial {
+  background-color: goldenrod;
+}
+
+.wrong {
+  background-color: red;
+}
+
+.guess-image {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 5px;
 }
