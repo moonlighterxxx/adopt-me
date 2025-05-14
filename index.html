@@ -4,18 +4,40 @@
   <meta charset="UTF-8">
   <title>Guess the Pet</title>
   <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
 </head>
 <body>
+  <div class="blur-background"></div>
   <div class="container">
     <img src="https://static.wikia.nocookie.net/fictionalcrossover/images/0/09/Adopt_Me_Logo.webp/revision/latest?cb=20240801145443" alt="Adopt Me Logo" class="logo">
-    <h1>Guess today's pet!</h1>
+    
+    <div class="header-box">
+      <h1>Guess today's pet!</h1>
+      <input type="text" id="guessInput" placeholder="Type pet name..." list="petList">
+      <datalist id="petList"></datalist>
+      <button onclick="submitGuess()">Submit</button>
+    </div>
 
-    <input type="text" id="guessInput" placeholder="Search for a pet..." list="petList">
-    <datalist id="petList"></datalist>
-    <button onclick="submitGuess()">Submit</button>
+    <div class="category-labels">
+      <div class="label">Pet</div>
+      <div class="label">Rarity</div>
+      <div class="label">Released</div>
+      <div class="label">Color</div>
+      <div class="label">Obtained</div>
+      <div class="label">Egg?</div>
+      <div class="label">Exclusive?</div>
+    </div>
 
     <div id="feedback"></div>
+
+    <div class="how-to">
+      <p onclick="toggleInstructions()">How to play</p>
+      <div id="instructions" class="hidden">
+        <p>Guess the Adopt Me! pet by typing its name. You’ll get hints based on rarity, release date, color, and more!</p>
+      </div>
+    </div>
   </div>
   <script src="script.js"></script>
 </body>
 </html>
+
