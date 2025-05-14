@@ -1,42 +1,88 @@
 body {
   margin: 0;
-  font-family: Arial, sans-serif;
-  background-color: #1e2a38;
+  font-family: 'Quicksand', sans-serif;
   color: white;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+}
+
+.blur-background {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background-image: url("https://i.imgur.com/3lLCEJV.jpeg");
+  background-size: cover;
+  background-position: center;
+  filter: blur(12px) brightness(0.4);
+  z-index: -1;
 }
 
 .container {
   text-align: center;
-  width: 90%;
-  max-width: 600px;
+  padding: 30px 20px;
+  max-width: 800px;
+  margin: auto;
 }
 
 .logo {
   width: 200px;
-  margin: 20px auto;
-  display: block;
+  margin-bottom: 20px;
+}
+
+.header-box {
+  background-color: #0c1c2f;
+  padding: 20px;
+  border-radius: 20px;
+  margin-bottom: 20px;
+}
+
+.header-box h1 {
+  background-color: #2196f3;
+  padding: 10px;
+  border-radius: 12px;
+  color: #fff;
+  margin-bottom: 15px;
 }
 
 input[type="text"] {
   padding: 10px;
   font-size: 16px;
-  width: 80%;
-  margin-top: 10px;
+  width: 70%;
+  border-radius: 10px;
+  border: none;
+  margin-bottom: 10px;
+  background-color: #174a6d;
+  color: white;
+}
+
+input[type="text"]::placeholder {
+  color: #ccc;
 }
 
 button {
   padding: 10px 20px;
   font-size: 16px;
-  margin-top: 10px;
+  border-radius: 10px;
+  background-color: #00bcd4;
+  color: white;
+  border: none;
+  margin-left: 10px;
   cursor: pointer;
 }
 
-#feedback {
-  margin-top: 20px;
+.category-labels {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  background-color: black;
+  padding: 8px;
+  border-radius: 10px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.label {
+  flex: 1;
 }
 
 .guess-row {
@@ -73,4 +119,26 @@ button {
   height: 50px;
   object-fit: cover;
   border-radius: 5px;
+}
+
+.how-to {
+  margin-top: 30px;
+  cursor: pointer;
+}
+
+.how-to p {
+  font-weight: bold;
+  font-size: 18px;
+  color: #87cefa;
+}
+
+#instructions {
+  background-color: #174a6d;
+  padding: 10px;
+  margin-top: 10px;
+  border-radius: 10px;
+}
+
+.hidden {
+  display: none;
 }
