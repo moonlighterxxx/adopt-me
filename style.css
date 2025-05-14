@@ -1,6 +1,6 @@
 body {
   margin: 0;
-  font-family: 'Quicksand', sans-serif;
+  font-family: 'Roboto', sans-serif;
   color: white;
   position: relative;
   overflow-x: hidden;
@@ -20,12 +20,12 @@ body {
 .container {
   text-align: center;
   padding: 30px 20px;
-  max-width: 800px;
+  max-width: 850px;
   margin: auto;
 }
 
 .logo {
-  width: 200px;
+  width: 220px;
   margin-bottom: 20px;
 }
 
@@ -83,6 +83,7 @@ button {
 
 .label {
   flex: 1;
+  text-align: center;
 }
 
 .guess-row {
@@ -91,6 +92,7 @@ button {
   margin-bottom: 10px;
   align-items: center;
   justify-content: center;
+  animation: fadeIn 0.4s ease-in-out;
 }
 
 .guess-cell {
@@ -100,6 +102,7 @@ button {
   border-radius: 5px;
   background-color: #444;
   color: white;
+  transition: all 0.3s ease;
 }
 
 .correct {
@@ -141,4 +144,28 @@ button {
 
 .hidden {
   display: none;
+}
+
+.fade {
+  opacity: 0;
+  transition: opacity 0.4s ease-in-out;
+}
+
+.fade.show {
+  opacity: 1;
+}
+
+.credits {
+  font-size: 14px;
+  margin-top: 10px;
+}
+
+.credits a {
+  color: #87cefa;
+  text-decoration: underline;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
