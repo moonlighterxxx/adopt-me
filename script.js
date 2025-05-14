@@ -7,7 +7,7 @@ const pets = [
     obtained: "Starter Egg",
     egg: "Yes",
     exclusive: "No",
-    image: "https://static.wikia.nocookie.net/adoptme/images/e/e5/Dog.png"
+    image: "https://i.postimg.cc/FFVLxNxL/Dog.webp"
   },
   {
     name: "Dragon",
@@ -22,11 +22,12 @@ const pets = [
 ];
 
 const todayPet = pets[Math.floor(Math.random() * pets.length)];
+let guessCount = 0;
+
 const guessInput = document.getElementById("guessInput");
 const datalist = document.getElementById("petList");
 const feedback = document.getElementById("feedback");
 
-// Populate datalist only after typing
 guessInput.addEventListener("input", () => {
   datalist.innerHTML = '';
   if (guessInput.value.length > 0) {
@@ -49,16 +50,16 @@ function submitGuess() {
     return;
   }
 
+  guessCount++;
+
   const row = document.createElement("div");
   row.className = "guess-row";
 
   row.appendChild(createImageCell(guessedPet.image));
-
   row.appendChild(createCell(guessedPet.name === todayPet.name ? "correct" : "wrong", guessedPet.name));
   row.appendChild(createCell(guessedPet.rarity === todayPet.rarity ? "correct" : "wrong", guessedPet.rarity));
   row.appendChild(createCell(guessedPet.released === todayPet.released ? "correct" : "wrong", guessedPet.released));
-  
-  // Color logic
+
   let colorStatus = "wrong";
   if (guessedPet.color === todayPet.color) colorStatus = "correct";
   else if (todayPet.color.includes(guessedPet.color) || guessedPet.color.includes(todayPet.color)) colorStatus = "partial";
@@ -68,8 +69,15 @@ function submitGuess() {
   row.appendChild(createCell(guessedPet.egg === todayPet.egg ? "correct" : "wrong", guessedPet.egg));
   row.appendChild(createCell(guessedPet.exclusive === todayPet.exclusive ? "correct" : "wrong", guessedPet.exclusive));
 
-  feedback.appendChild(row);
+  feedback.insertBefore(row, feedback.firstChild);
   guessInput.value = "";
+
+  if (guessedPet.name === todayPet.name) {
+    setTimeout(() => {
+      alert(`You Win! You guessed today's pet in ${guessCount} tries!`);
+      showWinStats();
+    }, 300);
+  }
 }
 
 function createCell(status, text) {
@@ -100,4 +108,21 @@ function createColorCell(status, hex) {
 function toggleInstructions() {
   const box = document.getElementById("instructions");
   box.classList.toggle("hidden");
+  setTimeout(() => box.classList.toggle("show"), 50);
+}
+
+function showWinStats() {
+  const stats = document.createElement("div");
+  stats.className = "guess-row";
+  stats.innerHTML = `
+    <div class="guess-cell"><img class="guess-image" src="${todayPet.image}"></div>
+    <div class="guess-cell correct">${todayPet.name}</div>
+    <div class="guess-cell correct">${todayPet.rarity}</div>
+    <div class="guess-cell correct">${todayPet.released}</div>
+    <div class="guess-cell correct" style="background-color:${todayPet.color}">${todayPet.color}</div>
+    <div class="guess-cell correct">${todayPet.obtained}</div>
+    <div class="guess-cell correct">${todayPet.egg}</div>
+    <div class="guess-cell correct">${todayPet.exclusive}</div>
+  `;
+  feedback.insertBefore(stats, feedback.firstChild);
 }
