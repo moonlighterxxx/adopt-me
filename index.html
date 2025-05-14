@@ -1,16 +1,21 @@
-<!-- index.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Guess the Game</title>
+  <title>Guess the Pet</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>🎮 Guess the Game!</h1>
-  <input type="text" id="guessInput" placeholder="Enter your guess..." />
-  <button onclick="submitGuess()">Submit</button>
-  <div id="feedback"></div>
+  <div class="container">
+    <img src="https://static.wikia.nocookie.net/fictionalcrossover/images/0/09/Adopt_Me_Logo.webp/revision/latest?cb=20240801145443" alt="Adopt Me Logo" class="logo">
+    <h1>Guess today's pet!</h1>
+
+    <input type="text" id="guessInput" placeholder="Search for a pet..." list="petList">
+    <datalist id="petList"></datalist>
+    <button onclick="submitGuess()">Submit</button>
+
+    <div id="feedback"></div>
+  </div>
   <script src="script.js"></script>
 </body>
 </html>
