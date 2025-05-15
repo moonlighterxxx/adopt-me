@@ -1,5 +1,3 @@
-// script.js
-
 const pets = [
   {
     name: "Dog",
@@ -33,56 +31,111 @@ const pets = [
   }
 ];
 
-const correctPet = pets[Math.floor(Math.random() * pets.length)];
-const feedbackContainer = document.getElementById("feedback");
-let guessCount = 0;
+let correctPet = pets[Math.floor(Math.random() * pets.length)];
+let guesses = [];
 
 function submitGuess() {
   const input = document.getElementById("guessInput");
   const guess = input.value.trim();
-  const guessedPet = pets.find(p => p.name.toLowerCase() === guess.toLowerCase());
+  const pet = pets.find(p => p.name.toLowerCase() === guess.toLowerCase());
 
-  if (!guessedPet) {
-    alert("That pet is not on the list!");
-    return;
-  }
+  if (!pet) return;
 
-  guessCount++;
-
-  const resultRow = document.createElement("div");
-  resultRow.className = "result-row";
-
-  resultRow.innerHTML = `
-    <img src="${guessedPet.image}" alt="${guessedPet.name}" class="pet-image">
-    <div class="hint ${getHintColor(guessedPet.rarity, correctPet.rarity)}">${guessedPet.rarity}</div>
-    <div class="hint ${getHintColor(guessedPet.release, correctPet.release)}">${guessedPet.release}</div>
-    <div class="hint ${getColorHint(guessedPet.colors, correctPet.colors)}">${guessedPet.colors.join(", ")}</div>
-    <div class="hint ${getHintColor(guessedPet.obtained, correctPet.obtained)}">${guessedPet.obtained}</div>
-    <div class="hint ${getHintColor(guessedPet.egg, correctPet.egg)}">${guessedPet.egg}</div>
-    <div class="hint ${getHintColor(guessedPet.exclusive, correctPet.exclusive)}">${guessedPet.exclusive}</div>
-  `;
-
-  feedbackContainer.prepend(resultRow);
+  guesses.unshift(pet);
   input.value = "";
+  updateFeedback();
 
-  if (guessedPet.name === correctPet.name) {
+  if (pet.name === correctPet.name) {
     setTimeout(() => {
-      alert(`You Win! You guessed today's pet in ${guessCount} tries!`);
+      alert(`You Win! You guessed today's pet in ${guesses.length} tries!`);
     }, 100);
   }
 }
 
-function getHintColor(guessValue, correctValue) {
-  if (guessValue === correctValue) return "green";
-  return "red";
+function updateFeedback() {
+  const feedback = document.getElementById("feedback");
+  feedback.innerHTML = "";
+
+  guesses.forEach((pet, index) => {
+    const container = document.createElement("div");
+    container.className = "guessRow fadeIn";
+
+    if (index === 0 && pet.name === correctPet.name) {
+      const congrats = document.createElement("div");
+      congrats.textContent = "🎉 Congrats! 🎉";
+      congrats.className = "congratsMessage";
+      feedback.appendChild(congrats);
+    }
+
+    const img = document.createElement("img");
+    img.src = pet.image;
+    img.alt = pet.name;
+    img.className = "petImage";
+    container.appendChild(img);
+
+    const stats = ["rarity", "release", "colors", "obtained", "egg", "exclusive"];
+    stats.forEach(key => {
+      const box = document.createElement("div");
+      box.className = "statBox";
+
+      if (key === "colors") {
+        const correctColors = correctPet.colors;
+        const matchedColors = pet.colors.filter(color => correctColors.includes(color));
+
+        if (matchedColors.length === pet.colors.length && matchedColors.length === correctColors.length) {
+          box.classList.add("green");
+        } else if (matchedColors.length > 0) {
+          box.classList.add("yellow");
+        } else {
+          box.classList.add("red");
+        }
+
+        pet.colors.forEach(color => {
+          const swatch = document.createElement("div");
+          swatch.className = "colorSwatch";
+          swatch.style.backgroundColor = color;
+          swatch.title = color;
+          box.appendChild(swatch);
+        });
+
+      } else {
+        const value = pet[key];
+        box.textContent = value;
+        if (value === correctPet[key]) {
+          box.classList.add("green");
+        } else if (typeof value === "string" && typeof correctPet[key] === "string") {
+          box.classList.add("yellow");
+        } else {
+          box.classList.add("red");
+        }
+      }
+
+      container.appendChild(box);
+    });
+
+    feedback.appendChild(container);
+  });
 }
 
-function getColorHint(guessColors, correctColors) {
-  if (guessColors.every(color => correctColors.includes(color)) && guessColors.length === correctColors.length) {
-    return "green";
-  } else if (guessColors.some(color => correctColors.includes(color))) {
-    return "yellow";
-  } else {
-    return "red";
-  }
+function filterSuggestions(query) {
+  return pets.filter(pet => pet.name.toLowerCase().includes(query.toLowerCase()));
 }
+
+document.getElementById("guessInput").addEventListener("input", function () {
+  const query = this.value;
+  const suggestions = document.getElementById("suggestions");
+  suggestions.innerHTML = "";
+  if (!query) return;
+
+  const matches = filterSuggestions(query);
+  matches.forEach(pet => {
+    const option = document.createElement("div");
+    option.className = "suggestionItem";
+    option.innerHTML = `<img src="${pet.image}" class="suggestionImage"> ${pet.name}`;
+    option.onclick = () => {
+      document.getElementById("guessInput").value = pet.name;
+      suggestions.innerHTML = "";
+    };
+    suggestions.appendChild(option);
+  });
+});
