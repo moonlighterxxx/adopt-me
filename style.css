@@ -1,104 +1,212 @@
 body {
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Fredoka One', cursive;
   margin: 0;
   padding: 0;
-  background-color: #f2f2f2;
-  color: #333;
-  display: flex;
-  justify-content: center;
-  align-items: start;
-  min-height: 100vh;
-}
-
-.main-container {
-  margin-top: 40px;
-  width: 90%;
-  max-width: 500px;
-}
-
-#title {
-  text-align: center;
-  font-family: 'Fredoka', sans-serif;
-  font-size: 2em;
   color: white;
-  background: linear-gradient(to right, #3a3a3a, #000);
-  padding: 10px 0;
-  border-radius: 10px;
-  margin-bottom: 20px;
+  overflow-x: hidden;
+  background: #1a1a2e;
+  position: relative;
+}
+
+.background-blur {
+  background-image: url('https://i.postimg.cc/nhjrNJqT/bed9fc87c5922ef9be34ab3afffac3d5.jpg');
+  background-size: cover;
+  background-position: center;
+  filter: blur(15px);
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  z-index: -1;
+}
+
+header {
+  text-align: center;
+  padding: 20px;
+}
+
+.main-logo {
+  max-width: 300px;
 }
 
 .guess-section {
-  background-color: black;
-  padding: 15px;
-  display: flex;
-  gap: 10px;
-  justify-content: center;
+  text-align: center;
+  margin: 20px 0;
+}
+
+.title-box {
+  background-color: rgba(0, 50, 80, 0.6);
+  display: inline-block;
+  padding: 20px;
+  border-radius: 15px;
+}
+
+.title-box h1 {
+  background-color: #4fc3f7;
   border-radius: 10px;
-  margin-bottom: 20px;
-}
-
-.guess-section input[type="text"] {
-  flex: 1;
-  padding: 10px;
-  border-radius: 5px;
-  border: none;
-  font-family: 'Roboto', sans-serif;
-  font-size: 16px;
-}
-
-.guess-section button {
   padding: 10px 20px;
-  border-radius: 5px;
-  border: none;
-  background-color: #4CAF50;
-  color: white;
-  font-weight: bold;
-  cursor: pointer;
+  margin-bottom: 10px;
+  color: #000;
 }
 
-.feedback-container {
+#guessInput {
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+  width: 200px;
+  font-family: 'Roboto', sans-serif;
+}
+
+.autocomplete-list {
+  list-style: none;
+  padding: 0;
+  margin-top: 10px;
+  background: #1e3a5f;
+  max-width: 300px;
+  margin: 0 auto;
+  border-radius: 10px;
+  display: none;
+}
+
+.autocomplete-list li {
+  padding: 8px;
+  cursor: pointer;
   display: flex;
-  flex-direction: column-reverse;
+  align-items: center;
   gap: 10px;
+}
+
+.autocomplete-list img {
+  width: 30px;
+  height: 30px;
+}
+
+.hint-header {
+  display: flex;
+  justify-content: center;
+  background: black;
+  padding: 10px;
+  font-weight: bold;
+  margin-top: 20px;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: 10px;
+  gap: 10px;
+}
+
+.hint-header span {
+  flex: 1;
+  text-align: center;
+}
+
+#feedbackContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding-bottom: 50px;
+}
+
+.feedback-row {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  opacity: 0;
+  animation: fadeIn 0.5s ease-in forwards;
+  max-width: 800px;
+  margin: 0 auto;
 }
 
 .feedback-box {
   padding: 10px;
-  border-radius: 5px;
+  border-radius: 10px;
+  min-width: 80px;
   text-align: center;
+  font-size: 0.9rem;
+  background-color: red;
+  color: white;
   font-weight: bold;
-  animation: slideDown 0.3s ease-out;
 }
 
-.feedback-green {
-  background-color: #d4edda;
-  color: #155724;
+.feedback-box.yellow {
+  background-color: orange;
 }
 
-.feedback-red {
-  background-color: #f8d7da;
-  color: #721c24;
+.feedback-box.green {
+  background-color: green;
 }
 
-.feedback-yellow {
-  background-color: #fff3cd;
-  color: #856404;
+.color-swatch {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border-radius: 6px;
+  margin: 0 2px;
+  position: relative;
 }
 
-@keyframes slideDown {
-  from {
-    transform: translateY(-10px);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
+.color-swatch:hover::after {
+  content: attr(data-color);
+  position: absolute;
+  top: -25px;
+  left: 0;
+  background: black;
+  color: white;
+  padding: 2px 5px;
+  font-size: 10px;
+  border-radius: 5px;
+  white-space: nowrap;
 }
 
-.info-row {
-  margin-top: 30px;
+#petDetailBox {
+  margin: 20px auto;
+  text-align: center;
+}
+
+.pet-card {
   display: flex;
-  justify-content: space-between;
-  font-size: 0.9em;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0,0,0,0.7);
+  padding: 20px;
+  border-radius: 15px;
+  gap: 20px;
+  animation: fadeIn 0.5s ease-in forwards;
+}
+
+.pet-card img {
+  width: 120px;
+  height: 120px;
+}
+
+.pet-info {
+  text-align: left;
+}
+
+.how-to {
+  text-align: center;
+  margin-top: 20px;
+}
+
+#howToPlayPopup {
+  background: #222;
+  padding: 10px 20px;
+  margin-top: 5px;
+  border-radius: 10px;
+  display: none;
+  animation: fadeIn 0.5s ease-in forwards;
+}
+
+.credit {
+  text-align: center;
+  margin-top: 10px;
+  color: grey;
+}
+
+.credit a {
+  color: grey;
+  text-decoration: none;
+}
+
+@keyframes fadeIn {
+  to { opacity: 1; }
 }
