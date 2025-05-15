@@ -1,127 +1,121 @@
 body {
-  font-family: 'Roboto', sans-serif;
   margin: 0;
-  padding: 0;
-  color: white;
+  font-family: 'Roboto', sans-serif;
+  background: url('https://i.postimg.cc/nhjrNJqT/bed9fc87c5922ef9be34ab3afffac3d5.jpg') no-repeat center center fixed;
+  background-size: cover;
+  color: #333;
   overflow-x: hidden;
-  background: #1a1a2e;
-  position: relative;
 }
 
-.background-blur {
-  background-image: url('https://i.postimg.cc/nhjrNJqT/bed9fc87c5922ef9be34ab3afffac3d5.jpg');
-  background-size: cover;
-  background-position: center;
-  filter: blur(15px);
+#backgroundOverlay {
   position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
+  inset: 0;
+  backdrop-filter: blur(6px);
   z-index: -1;
 }
 
-header {
-  text-align: center;
-  padding: 20px;
+.titleWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 20px;
+  position: relative;
 }
 
-.main-logo {
-  max-width: 300px;
-}
-
-.guess-section {
-  text-align: center;
-  margin: 20px 0;
-}
-
-.title-box {
-  background-color: rgba(0, 50, 80, 0.6);
-  display: inline-block;
-  padding: 20px;
-  border-radius: 15px;
-}
-
-.title-box h1 {
-  background-color: #4fc3f7;
-  border-radius: 10px;
-  padding: 10px 20px;
-  margin-bottom: 10px;
-  color: #000;
-}
-
-#guessInput {
-  padding: 10px;
-  border-radius: 8px;
-  border: none;
+.logo {
   width: 200px;
 }
 
-.autocomplete-list {
-  list-style: none;
-  padding: 0;
-  margin-top: 10px;
-  background: #1e3a5f;
-  max-width: 300px;
-  margin: 0 auto;
-  border-radius: 10px;
-  display: none;
+.gameTitle {
+  background: #cbe7ff;
+  border: 4px solid #7dbfe8;
+  padding: 8px 24px;
+  border-radius: 18px;
+  color: white;
+  font-weight: bold;
+  font-size: 26px;
+  margin-top: -20px;
+  z-index: 1;
 }
 
-.autocomplete-list li {
+.gameContainer {
+  margin: 40px auto;
+  width: 90%;
+  max-width: 700px;
+  background: rgba(255, 255, 255, 0.75);
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 0 20px rgba(0,0,0,0.3);
+  text-align: center;
+}
+
+.inputWrapper {
+  position: relative;
+}
+
+#guessInput {
+  width: 100%;
+  padding: 12px;
+  font-size: 18px;
+  font-family: 'Fredoka', sans-serif;
+  border-radius: 8px;
+  border: 2px solid #7dbfe8;
+}
+
+.suggestionsBox {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: #cbe7ff;
+  border-radius: 8px;
+  z-index: 2;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  overflow: hidden;
+}
+
+.suggestionItem {
   padding: 8px;
   cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 10px;
 }
 
-.autocomplete-list img {
+.suggestionItem:hover {
+  background: #b2dbfc;
+}
+
+.suggestionImage {
   width: 30px;
   height: 30px;
+  margin-right: 10px;
 }
 
-.hint-header {
-  display: flex;
-  justify-content: space-around;
-  background: black;
-  padding: 10px;
-  font-weight: bold;
+#feedback {
   margin-top: 20px;
 }
 
-#feedbackContainer {
+.guessRow {
   display: flex;
-  flex-direction: column-reverse;
   align-items: center;
-  gap: 10px;
-  padding-bottom: 50px;
-}
-
-.feedback-row {
-  display: flex;
   justify-content: center;
-  gap: 10px;
-  opacity: 0;
-  animation: fadeIn 0.5s ease-in forwards;
+  gap: 8px;
+  margin-bottom: 12px;
+  animation: fadeIn 0.6s ease;
 }
 
-.feedback-box {
-  padding: 10px;
-  border-radius: 10px;
-  min-width: 80px;
+.statBox {
+  padding: 6px 10px;
+  border-radius: 8px;
+  font-weight: bold;
   text-align: center;
-  font-size: 0.9rem;
-  background-color: red;
-  color: white;
 }
 
-.feedback-box.yellow {
-  background-color: orange;
-}
+.green { background: #a8e6a3; }
+.yellow { background: #fff59d; }
+.red { background: #ef9a9a; }
 
-.feedback-box.green {
-  background-color: green;
-}
-
-.color-swatch {
+.colorSwatch {
   display: inline-block;
   width: 20px;
   height: 20px;
@@ -130,69 +124,69 @@ header {
   position: relative;
 }
 
-.color-swatch:hover::after {
-  content: attr(data-color);
+.colorSwatch:hover::after {
+  content: attr(title);
   position: absolute;
-  top: -25px;
-  left: 0;
-  background: black;
+  top: -24px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 12px;
+  background: #333;
   color: white;
-  padding: 2px 5px;
-  font-size: 10px;
-  border-radius: 5px;
+  padding: 2px 6px;
+  border-radius: 4px;
   white-space: nowrap;
 }
 
-#petDetailBox {
-  margin: 20px auto;
+.footer {
   text-align: center;
+  margin-top: 30px;
 }
 
-.pet-card {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: rgba(0,0,0,0.7);
-  padding: 20px;
-  border-radius: 15px;
-  gap: 20px;
-  animation: fadeIn 0.5s ease-in forwards;
+#howToPlay {
+  font-weight: bold;
+  cursor: pointer;
 }
 
-.pet-card img {
-  width: 120px;
-  height: 120px;
-}
-
-.pet-info {
+.instructionsPopup {
+  display: none;
+  background: white;
+  border: 1px solid #999;
+  border-radius: 10px;
+  padding: 10px;
+  margin: 10px auto;
+  width: 90%;
+  max-width: 400px;
   text-align: left;
 }
 
-.how-to {
-  text-align: center;
-  margin-top: 20px;
-}
-
-#howToPlayPopup {
-  background: #222;
-  padding: 10px 20px;
-  margin-top: 5px;
-  border-radius: 10px;
-  display: none;
-  animation: fadeIn 0.5s ease-in forwards;
+.instructionsPopup ul {
+  padding-left: 20px;
 }
 
 .credit {
-  text-align: center;
   margin-top: 10px;
-  color: grey;
+  font-weight: bold;
+  color: #333;
 }
 
 .credit a {
-  color: grey;
+  color: #333;
   text-decoration: none;
 }
 
+.fadeIn {
+  animation: fadeIn 0.5s ease forwards;
+}
+
 @keyframes fadeIn {
-  to { opacity: 1; }
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.congratsMessage {
+  font-size: 20px;
+  color: #4caf50;
+  font-weight: bold;
+  margin-bottom: 10px;
 }
