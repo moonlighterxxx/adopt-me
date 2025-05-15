@@ -1,171 +1,198 @@
 body {
-  margin: 0;
   font-family: 'Roboto', sans-serif;
+  margin: 0;
+  padding: 0;
   color: white;
-  position: relative;
   overflow-x: hidden;
+  background: #1a1a2e;
+  position: relative;
 }
 
-.blur-background {
-  position: fixed;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  background-image: url("https://i.imgur.com/3lLCEJV.jpeg");
+.background-blur {
+  background-image: url('https://i.postimg.cc/nhjrNJqT/bed9fc87c5922ef9be34ab3afffac3d5.jpg');
   background-size: cover;
   background-position: center;
-  filter: blur(12px) brightness(0.4);
+  filter: blur(15px);
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
   z-index: -1;
 }
 
-.container {
+header {
   text-align: center;
-  padding: 30px 20px;
-  max-width: 850px;
-  margin: auto;
-}
-
-.logo {
-  width: 220px;
-  margin-bottom: 20px;
-}
-
-.header-box {
-  background-color: #0c1c2f;
   padding: 20px;
-  border-radius: 20px;
-  margin-bottom: 20px;
 }
 
-.header-box h1 {
-  background-color: #2196f3;
-  padding: 10px;
-  border-radius: 12px;
-  color: #fff;
-  margin-bottom: 15px;
+.main-logo {
+  max-width: 300px;
 }
 
-input[type="text"] {
-  padding: 10px;
-  font-size: 16px;
-  width: 70%;
+.guess-section {
+  text-align: center;
+  margin: 20px 0;
+}
+
+.title-box {
+  background-color: rgba(0, 50, 80, 0.6);
+  display: inline-block;
+  padding: 20px;
+  border-radius: 15px;
+}
+
+.title-box h1 {
+  background-color: #4fc3f7;
   border-radius: 10px;
-  border: none;
-  margin-bottom: 10px;
-  background-color: #174a6d;
-  color: white;
-}
-
-input[type="text"]::placeholder {
-  color: #ccc;
-}
-
-button {
   padding: 10px 20px;
-  font-size: 16px;
-  border-radius: 10px;
-  background-color: #00bcd4;
-  color: white;
+  margin-bottom: 10px;
+  color: #000;
+}
+
+#guessInput {
+  padding: 10px;
+  border-radius: 8px;
   border: none;
-  margin-left: 10px;
-  cursor: pointer;
+  width: 200px;
 }
 
-.category-labels {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-  background-color: black;
-  padding: 8px;
-  border-radius: 10px;
-  font-weight: bold;
-  margin-bottom: 10px;
-}
-
-.label {
-  flex: 1;
-  text-align: center;
-}
-
-.guess-row {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 10px;
-  align-items: center;
-  justify-content: center;
-  animation: fadeIn 0.4s ease-in-out;
-}
-
-.guess-cell {
-  padding: 10px;
-  min-width: 80px;
-  text-align: center;
-  border-radius: 5px;
-  background-color: #444;
-  color: white;
-  transition: all 0.3s ease;
-}
-
-.correct {
-  background-color: green;
-}
-
-.partial {
-  background-color: goldenrod;
-}
-
-.wrong {
-  background-color: red;
-}
-
-.guess-image {
-  width: 50px;
-  height: 50px;
-  object-fit: cover;
-  border-radius: 5px;
-}
-
-.how-to {
-  margin-top: 30px;
-  cursor: pointer;
-}
-
-.how-to p {
-  font-weight: bold;
-  font-size: 18px;
-  color: #87cefa;
-}
-
-#instructions {
-  background-color: #174a6d;
-  padding: 10px;
+.autocomplete-list {
+  list-style: none;
+  padding: 0;
   margin-top: 10px;
+  background: #1e3a5f;
+  max-width: 300px;
+  margin: 0 auto;
   border-radius: 10px;
-}
-
-.hidden {
   display: none;
 }
 
-.fade {
+.autocomplete-list li {
+  padding: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.autocomplete-list img {
+  width: 30px;
+  height: 30px;
+}
+
+.hint-header {
+  display: flex;
+  justify-content: space-around;
+  background: black;
+  padding: 10px;
+  font-weight: bold;
+  margin-top: 20px;
+}
+
+#feedbackContainer {
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: center;
+  gap: 10px;
+  padding-bottom: 50px;
+}
+
+.feedback-row {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
   opacity: 0;
-  transition: opacity 0.4s ease-in-out;
+  animation: fadeIn 0.5s ease-in forwards;
 }
 
-.fade.show {
-  opacity: 1;
+.feedback-box {
+  padding: 10px;
+  border-radius: 10px;
+  min-width: 80px;
+  text-align: center;
+  font-size: 0.9rem;
+  background-color: red;
+  color: white;
 }
 
-.credits {
-  font-size: 14px;
+.feedback-box.yellow {
+  background-color: orange;
+}
+
+.feedback-box.green {
+  background-color: green;
+}
+
+.color-swatch {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border-radius: 6px;
+  margin: 0 2px;
+  position: relative;
+}
+
+.color-swatch:hover::after {
+  content: attr(data-color);
+  position: absolute;
+  top: -25px;
+  left: 0;
+  background: black;
+  color: white;
+  padding: 2px 5px;
+  font-size: 10px;
+  border-radius: 5px;
+  white-space: nowrap;
+}
+
+#petDetailBox {
+  margin: 20px auto;
+  text-align: center;
+}
+
+.pet-card {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0,0,0,0.7);
+  padding: 20px;
+  border-radius: 15px;
+  gap: 20px;
+  animation: fadeIn 0.5s ease-in forwards;
+}
+
+.pet-card img {
+  width: 120px;
+  height: 120px;
+}
+
+.pet-info {
+  text-align: left;
+}
+
+.how-to {
+  text-align: center;
+  margin-top: 20px;
+}
+
+#howToPlayPopup {
+  background: #222;
+  padding: 10px 20px;
+  margin-top: 5px;
+  border-radius: 10px;
+  display: none;
+  animation: fadeIn 0.5s ease-in forwards;
+}
+
+.credit {
+  text-align: center;
   margin-top: 10px;
+  color: grey;
 }
 
-.credits a {
-  color: #87cefa;
-  text-decoration: underline;
+.credit a {
+  color: grey;
+  text-decoration: none;
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(-10px); }
-  to { opacity: 1; transform: translateY(0); }
+  to { opacity: 1; }
 }
