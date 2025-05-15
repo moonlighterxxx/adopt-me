@@ -1,128 +1,135 @@
 const pets = [
   {
     name: "Dog",
+    image: "https://i.postimg.cc/FFVLxNxL/Dog.webp",
     rarity: "Common",
-    released: "2019-06-15",
-    color: "#c2b280",
+    release: "2019",
+    colors: ["beige"],
     obtained: "Starter Egg",
     egg: "Yes",
-    exclusive: "No",
-    image: "https://i.postimg.cc/FFVLxNxL/Dog.webp"
+    exclusive: "No"
   },
   {
     name: "Dragon",
+    image: "https://i.postimg.cc/5NH1YyNH/Dragon.webp",
     rarity: "Legendary",
-    released: "2019-06-15",
-    color: "#ff4f4f",
-    obtained: "Hatch",
-    egg: "No",
-    exclusive: "Yes",
-    image: "https://static.wikia.nocookie.net/adoptme/images/f/f2/Dragon.png"
+    release: "2020",
+    colors: ["red", "black"],
+    obtained: "Royal Egg",
+    egg: "Yes",
+    exclusive: "No"
   }
 ];
 
-const todayPet = pets[Math.floor(Math.random() * pets.length)];
-let guessCount = 0;
+const answer = pets[1]; // change daily if needed
+let guesses = [];
 
 const guessInput = document.getElementById("guessInput");
-const datalist = document.getElementById("petList");
-const feedback = document.getElementById("feedback");
+const feedbackContainer = document.getElementById("feedbackContainer");
+const autocompleteList = document.getElementById("autocompleteList");
+const petDetailBox = document.getElementById("petDetailBox");
+
+document.getElementById("howToPlayToggle").onclick = () => {
+  const popup = document.getElementById("howToPlayPopup");
+  popup.style.display = popup.style.display === "block" ? "none" : "block";
+};
 
 guessInput.addEventListener("input", () => {
-  datalist.innerHTML = '';
-  if (guessInput.value.length > 0) {
-    pets.forEach(pet => {
-      if (pet.name.toLowerCase().includes(guessInput.value.toLowerCase())) {
-        const option = document.createElement("option");
-        option.value = pet.name;
-        datalist.appendChild(option);
-      }
-    });
+  const val = guessInput.value.toLowerCase();
+  autocompleteList.innerHTML = "";
+  if (val.length === 0) {
+    autocompleteList.style.display = "none";
+    return;
   }
+  const matches = pets.filter(p => p.name.toLowerCase().startsWith(val));
+  matches.forEach(p => {
+    const li = document.createElement("li");
+    li.innerHTML = `<img src="${p.image}" /> ${p.name}`;
+    li.onclick = () => {
+      guessInput.value = p.name;
+      autocompleteList.style.display = "none";
+      submitGuess();
+    };
+    autocompleteList.appendChild(li);
+  });
+  autocompleteList.style.display = matches.length ? "block" : "none";
 });
 
 function submitGuess() {
-  const guess = guessInput.value.trim();
-  const guessedPet = pets.find(p => p.name.toLowerCase() === guess.toLowerCase());
+  const val = guessInput.value.trim().toLowerCase();
+  const guessedPet = pets.find(p => p.name.toLowerCase() === val);
+  if (!guessedPet) return;
 
-  if (!guessedPet) {
-    alert("Please select a pet from the list.");
-    return;
-  }
-
-  guessCount++;
+  guesses.unshift(guessedPet);
 
   const row = document.createElement("div");
-  row.className = "guess-row";
+  row.className = "feedback-row";
 
-  row.appendChild(createImageCell(guessedPet.image));
-  row.appendChild(createCell(guessedPet.name === todayPet.name ? "correct" : "wrong", guessedPet.name));
-  row.appendChild(createCell(guessedPet.rarity === todayPet.rarity ? "correct" : "wrong", guessedPet.rarity));
-  row.appendChild(createCell(guessedPet.released === todayPet.released ? "correct" : "wrong", guessedPet.released));
+  const feedback = [
+    guessedPet.name,
+    guessedPet.rarity === answer.rarity ? "green" : "red",
+    guessedPet.release === answer.release ? "green" : "red",
+    colorMatch(guessedPet.colors, answer.colors),
+    guessedPet.obtained === answer.obtained ? "green" : "red",
+    guessedPet.egg === answer.egg ? "green" : "red",
+    guessedPet.exclusive === answer.exclusive ? "green" : "red"
+  ];
 
-  let colorStatus = "wrong";
-  if (guessedPet.color === todayPet.color) colorStatus = "correct";
-  else if (todayPet.color.includes(guessedPet.color) || guessedPet.color.includes(todayPet.color)) colorStatus = "partial";
-  row.appendChild(createColorCell(colorStatus, guessedPet.color));
+  const colorsBox = document.createElement("div");
+  colorsBox.className = `feedback-box ${feedback[3].status}`;
+  guessedPet.colors.forEach(color => {
+    const swatch = document.createElement("div");
+    swatch.className = "color-swatch";
+    swatch.style.background = color;
+    swatch.setAttribute("data-color", color);
+    colorsBox.appendChild(swatch);
+  });
 
-  row.appendChild(createCell(guessedPet.obtained === todayPet.obtained ? "correct" : "wrong", guessedPet.obtained));
-  row.appendChild(createCell(guessedPet.egg === todayPet.egg ? "correct" : "wrong", guessedPet.egg));
-  row.appendChild(createCell(guessedPet.exclusive === todayPet.exclusive ? "correct" : "wrong", guessedPet.exclusive));
+  row.innerHTML = `
+    <div class="feedback-box"><img src="${guessedPet.image}" width="40" /></div>
+    <div class="feedback-box ${feedback[1]}">${guessedPet.rarity}</div>
+    <div class="feedback-box ${feedback[2]}">${guessedPet.release}</div>
+  `;
+  row.appendChild(colorsBox);
+  row.innerHTML += `
+    <div class="feedback-box ${feedback[4]}">${guessedPet.obtained}</div>
+    <div class="feedback-box ${feedback[5]}">${guessedPet.egg}</div>
+    <div class="feedback-box ${feedback[6]}">${guessedPet.exclusive}</div>
+  `;
 
-  feedback.insertBefore(row, feedback.firstChild);
-  guessInput.value = "";
+  feedbackContainer.prepend(row);
 
-  if (guessedPet.name === todayPet.name) {
-    setTimeout(() => {
-      alert(`You Win! You guessed today's pet in ${guessCount} tries!`);
-      showWinStats();
-    }, 300);
+  if (guessedPet.name === answer.name) {
+    showWinPopup();
+    showCorrectPet(guessedPet);
   }
 }
 
-function createCell(status, text) {
-  const cell = document.createElement("div");
-  cell.className = `guess-cell ${status}`;
-  cell.textContent = text;
-  return cell;
+function showWinPopup() {
+  alert(`www.weblink says:\nYou Win! You guessed today's pet in ${guesses.length} tries!`);
 }
 
-function createImageCell(src) {
-  const cell = document.createElement("div");
-  const img = document.createElement("img");
-  img.src = src;
-  img.className = "guess-image";
-  cell.className = "guess-cell";
-  cell.appendChild(img);
-  return cell;
-}
-
-function createColorCell(status, hex) {
-  const cell = document.createElement("div");
-  cell.className = `guess-cell ${status}`;
-  cell.style.backgroundColor = hex;
-  cell.textContent = hex;
-  return cell;
-}
-
-function toggleInstructions() {
-  const box = document.getElementById("instructions");
-  box.classList.toggle("hidden");
-  setTimeout(() => box.classList.toggle("show"), 50);
-}
-
-function showWinStats() {
-  const stats = document.createElement("div");
-  stats.className = "guess-row";
-  stats.innerHTML = `
-    <div class="guess-cell"><img class="guess-image" src="${todayPet.image}"></div>
-    <div class="guess-cell correct">${todayPet.name}</div>
-    <div class="guess-cell correct">${todayPet.rarity}</div>
-    <div class="guess-cell correct">${todayPet.released}</div>
-    <div class="guess-cell correct" style="background-color:${todayPet.color}">${todayPet.color}</div>
-    <div class="guess-cell correct">${todayPet.obtained}</div>
-    <div class="guess-cell correct">${todayPet.egg}</div>
-    <div class="guess-cell correct">${todayPet.exclusive}</div>
+function showCorrectPet(pet) {
+  petDetailBox.innerHTML = `
+    <div class="pet-card">
+      <img src="${pet.image}" />
+      <div class="pet-info">
+        <p><strong>Name:</strong> ${pet.name}</p>
+        <p><strong>Rarity:</strong> ${pet.rarity}</p>
+        <p><strong>Release:</strong> ${pet.release}</p>
+        <p><strong>Colors:</strong> ${pet.colors.join(", ")}</p>
+        <p><strong>Obtained:</strong> ${pet.obtained}</p>
+        <p><strong>Egg?</strong> ${pet.egg}</p>
+        <p><strong>Exclusive?</strong> ${pet.exclusive}</p>
+      </div>
+    </div>
   `;
-  feedback.insertBefore(stats, feedback.firstChild);
+}
+
+function colorMatch(guessColors, answerColors) {
+  const allMatch = guessColors.every(c => answerColors.includes(c)) && guessColors.length === answerColors.length;
+  const someMatch = guessColors.some(c => answerColors.includes(c));
+  return {
+    status: allMatch ? "green" : someMatch ? "yellow" : "red"
+  };
 }
