@@ -1,141 +1,128 @@
 const pets = [
   {
     name: "Dog",
-    image: "https://i.postimg.cc/FFVLxNxL/Dog.webp",
     rarity: "Common",
-    release: "June 15, 2019",
-    colors: ["beige"],
+    released: "2019-06-15",
+    color: "#c2b280",
     obtained: "Starter Egg",
     egg: "Yes",
-    exclusive: "No"
+    exclusive: "No",
+    image: "https://i.postimg.cc/FFVLxNxL/Dog.webp"
   },
   {
     name: "Dragon",
-    image: "https://i.postimg.cc/5NH1YyNH/Dragon.webp",
     rarity: "Legendary",
-    release: "June 15, 2019",
-    colors: ["red", "black"],
-    obtained: "Pet Egg",
-    egg: "Yes",
-    exclusive: "No"
-  },
-  {
-    name: "Cat",
-    image: "https://i.postimg.cc/5NH1YyNH/Dragon.webp",
-    rarity: "Common",
-    release: "June 15, 2019",
-    colors: ["grey"],
-    obtained: "Pet Egg",
-    egg: "Yes",
-    exclusive: "No"
+    released: "2019-06-15",
+    color: "#ff4f4f",
+    obtained: "Hatch",
+    egg: "No",
+    exclusive: "Yes",
+    image: "https://static.wikia.nocookie.net/adoptme/images/f/f2/Dragon.png"
   }
 ];
 
-let correctPet = pets[Math.floor(Math.random() * pets.length)];
-let guesses = [];
+const todayPet = pets[Math.floor(Math.random() * pets.length)];
+let guessCount = 0;
+
+const guessInput = document.getElementById("guessInput");
+const datalist = document.getElementById("petList");
+const feedback = document.getElementById("feedback");
+
+guessInput.addEventListener("input", () => {
+  datalist.innerHTML = '';
+  if (guessInput.value.length > 0) {
+    pets.forEach(pet => {
+      if (pet.name.toLowerCase().includes(guessInput.value.toLowerCase())) {
+        const option = document.createElement("option");
+        option.value = pet.name;
+        datalist.appendChild(option);
+      }
+    });
+  }
+});
 
 function submitGuess() {
-  const input = document.getElementById("guessInput");
-  const guess = input.value.trim();
-  const pet = pets.find(p => p.name.toLowerCase() === guess.toLowerCase());
+  const guess = guessInput.value.trim();
+  const guessedPet = pets.find(p => p.name.toLowerCase() === guess.toLowerCase());
 
-  if (!pet) return;
+  if (!guessedPet) {
+    alert("Please select a pet from the list.");
+    return;
+  }
 
-  guesses.unshift(pet);
-  input.value = "";
-  updateFeedback();
+  guessCount++;
 
-  if (pet.name === correctPet.name) {
+  const row = document.createElement("div");
+  row.className = "guess-row";
+
+  row.appendChild(createImageCell(guessedPet.image));
+  row.appendChild(createCell(guessedPet.name === todayPet.name ? "correct" : "wrong", guessedPet.name));
+  row.appendChild(createCell(guessedPet.rarity === todayPet.rarity ? "correct" : "wrong", guessedPet.rarity));
+  row.appendChild(createCell(guessedPet.released === todayPet.released ? "correct" : "wrong", guessedPet.released));
+
+  let colorStatus = "wrong";
+  if (guessedPet.color === todayPet.color) colorStatus = "correct";
+  else if (todayPet.color.includes(guessedPet.color) || guessedPet.color.includes(todayPet.color)) colorStatus = "partial";
+  row.appendChild(createColorCell(colorStatus, guessedPet.color));
+
+  row.appendChild(createCell(guessedPet.obtained === todayPet.obtained ? "correct" : "wrong", guessedPet.obtained));
+  row.appendChild(createCell(guessedPet.egg === todayPet.egg ? "correct" : "wrong", guessedPet.egg));
+  row.appendChild(createCell(guessedPet.exclusive === todayPet.exclusive ? "correct" : "wrong", guessedPet.exclusive));
+
+  feedback.insertBefore(row, feedback.firstChild);
+  guessInput.value = "";
+
+  if (guessedPet.name === todayPet.name) {
     setTimeout(() => {
-      alert(`You Win! You guessed today's pet in ${guesses.length} tries!`);
-    }, 100);
+      alert(`You Win! You guessed today's pet in ${guessCount} tries!`);
+      showWinStats();
+    }, 300);
   }
 }
 
-function updateFeedback() {
-  const feedback = document.getElementById("feedback");
-  feedback.innerHTML = "";
-
-  guesses.forEach((pet, index) => {
-    const container = document.createElement("div");
-    container.className = "guessRow fadeIn";
-
-    if (index === 0 && pet.name === correctPet.name) {
-      const congrats = document.createElement("div");
-      congrats.textContent = "🎉 Congrats! 🎉";
-      congrats.className = "congratsMessage";
-      feedback.appendChild(congrats);
-    }
-
-    const img = document.createElement("img");
-    img.src = pet.image;
-    img.alt = pet.name;
-    img.className = "petImage";
-    container.appendChild(img);
-
-    const stats = ["rarity", "release", "colors", "obtained", "egg", "exclusive"];
-    stats.forEach(key => {
-      const box = document.createElement("div");
-      box.className = "statBox";
-
-      if (key === "colors") {
-        const correctColors = correctPet.colors;
-        const matchedColors = pet.colors.filter(color => correctColors.includes(color));
-
-        if (matchedColors.length === pet.colors.length && matchedColors.length === correctColors.length) {
-          box.classList.add("green");
-        } else if (matchedColors.length > 0) {
-          box.classList.add("yellow");
-        } else {
-          box.classList.add("red");
-        }
-
-        pet.colors.forEach(color => {
-          const swatch = document.createElement("div");
-          swatch.className = "colorSwatch";
-          swatch.style.backgroundColor = color;
-          swatch.title = color;
-          box.appendChild(swatch);
-        });
-
-      } else {
-        const value = pet[key];
-        box.textContent = value;
-        if (value === correctPet[key]) {
-          box.classList.add("green");
-        } else if (typeof value === "string" && typeof correctPet[key] === "string") {
-          box.classList.add("yellow");
-        } else {
-          box.classList.add("red");
-        }
-      }
-
-      container.appendChild(box);
-    });
-
-    feedback.appendChild(container);
-  });
+function createCell(status, text) {
+  const cell = document.createElement("div");
+  cell.className = `guess-cell ${status}`;
+  cell.textContent = text;
+  return cell;
 }
 
-function filterSuggestions(query) {
-  return pets.filter(pet => pet.name.toLowerCase().includes(query.toLowerCase()));
+function createImageCell(src) {
+  const cell = document.createElement("div");
+  const img = document.createElement("img");
+  img.src = src;
+  img.className = "guess-image";
+  cell.className = "guess-cell";
+  cell.appendChild(img);
+  return cell;
 }
 
-document.getElementById("guessInput").addEventListener("input", function () {
-  const query = this.value;
-  const suggestions = document.getElementById("suggestions");
-  suggestions.innerHTML = "";
-  if (!query) return;
+function createColorCell(status, hex) {
+  const cell = document.createElement("div");
+  cell.className = `guess-cell ${status}`;
+  cell.style.backgroundColor = hex;
+  cell.textContent = hex;
+  return cell;
+}
 
-  const matches = filterSuggestions(query);
-  matches.forEach(pet => {
-    const option = document.createElement("div");
-    option.className = "suggestionItem";
-    option.innerHTML = `<img src="${pet.image}" class="suggestionImage"> ${pet.name}`;
-    option.onclick = () => {
-      document.getElementById("guessInput").value = pet.name;
-      suggestions.innerHTML = "";
-    };
-    suggestions.appendChild(option);
-  });
-});
+function toggleInstructions() {
+  const box = document.getElementById("instructions");
+  box.classList.toggle("hidden");
+  setTimeout(() => box.classList.toggle("show"), 50);
+}
+
+function showWinStats() {
+  const stats = document.createElement("div");
+  stats.className = "guess-row";
+  stats.innerHTML = `
+    <div class="guess-cell"><img class="guess-image" src="${todayPet.image}"></div>
+    <div class="guess-cell correct">${todayPet.name}</div>
+    <div class="guess-cell correct">${todayPet.rarity}</div>
+    <div class="guess-cell correct">${todayPet.released}</div>
+    <div class="guess-cell correct" style="background-color:${todayPet.color}">${todayPet.color}</div>
+    <div class="guess-cell correct">${todayPet.obtained}</div>
+    <div class="guess-cell correct">${todayPet.egg}</div>
+    <div class="guess-cell correct">${todayPet.exclusive}</div>
+  `;
+  feedback.insertBefore(stats, feedback.firstChild);
+}
