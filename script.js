@@ -1,3 +1,5 @@
+// script.js
+
 const pets = [
   {
     name: "Dog",
@@ -31,9 +33,8 @@ const pets = [
   }
 ];
 
-// Pick a random pet to guess
 const correctPet = pets[Math.floor(Math.random() * pets.length)];
-const feedbackContainer = document.getElementById("feedbackContainer");
+const feedbackContainer = document.getElementById("feedback");
 let guessCount = 0;
 
 function submitGuess() {
@@ -49,22 +50,22 @@ function submitGuess() {
   guessCount++;
 
   const resultRow = document.createElement("div");
-  resultRow.className = "feedback-row";
+  resultRow.className = "result-row";
 
   resultRow.innerHTML = `
-    <img src="${guessedPet.image}" alt="${guessedPet.name}" class="pet-image" style="width:50px; height:50px; border-radius:8px;">
-    <div class="feedback-box ${getHintColor(guessedPet.rarity, correctPet.rarity)}">${guessedPet.rarity}</div>
-    <div class="feedback-box ${getHintColor(guessedPet.release, correctPet.release)}">${guessedPet.release}</div>
-    <div class="feedback-box ${getColorHint(guessedPet.colors, correctPet.colors)}">${guessedPet.colors.join(", ")}</div>
-    <div class="feedback-box ${getHintColor(guessedPet.obtained, correctPet.obtained)}">${guessedPet.obtained}</div>
-    <div class="feedback-box ${getHintColor(guessedPet.egg, correctPet.egg)}">${guessedPet.egg}</div>
-    <div class="feedback-box ${getHintColor(guessedPet.exclusive, correctPet.exclusive)}">${guessedPet.exclusive}</div>
+    <img src="${guessedPet.image}" alt="${guessedPet.name}" class="pet-image">
+    <div class="hint ${getHintColor(guessedPet.rarity, correctPet.rarity)}">${guessedPet.rarity}</div>
+    <div class="hint ${getHintColor(guessedPet.release, correctPet.release)}">${guessedPet.release}</div>
+    <div class="hint ${getColorHint(guessedPet.colors, correctPet.colors)}">${guessedPet.colors.join(", ")}</div>
+    <div class="hint ${getHintColor(guessedPet.obtained, correctPet.obtained)}">${guessedPet.obtained}</div>
+    <div class="hint ${getHintColor(guessedPet.egg, correctPet.egg)}">${guessedPet.egg}</div>
+    <div class="hint ${getHintColor(guessedPet.exclusive, correctPet.exclusive)}">${guessedPet.exclusive}</div>
   `;
 
   feedbackContainer.prepend(resultRow);
   input.value = "";
 
-  if (guessedPet.name.toLowerCase() === correctPet.name.toLowerCase()) {
+  if (guessedPet.name === correctPet.name) {
     setTimeout(() => {
       alert(`You Win! You guessed today's pet in ${guessCount} tries!`);
     }, 100);
@@ -72,20 +73,16 @@ function submitGuess() {
 }
 
 function getHintColor(guessValue, correctValue) {
-  return guessValue === correctValue ? "green" : "red";
+  if (guessValue === correctValue) return "green";
+  return "red";
 }
 
 function getColorHint(guessColors, correctColors) {
-  if (guessColors.length === correctColors.length && guessColors.every(c => correctColors.includes(c))) {
+  if (guessColors.every(color => correctColors.includes(color)) && guessColors.length === correctColors.length) {
     return "green";
-  } else if (guessColors.some(c => correctColors.includes(c))) {
+  } else if (guessColors.some(color => correctColors.includes(color))) {
     return "yellow";
   } else {
     return "red";
   }
 }
-
-// Optional: add Enter key support for the input
-document.getElementById('guessInput').addEventListener('keydown', (e) => {
-  if (e.key === 'Enter') submitGuess();
-});
