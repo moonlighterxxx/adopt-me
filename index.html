@@ -1,43 +1,50 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Guess the Pet</title>
-  <link rel="stylesheet" href="style.css">
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
 </head>
 <body>
-  <div class="blur-background"></div>
-  <div class="container">
-    <img src="https://i.postimg.cc/3NYDHc3N/Adopt-Me-Logo.webp" alt="Adopt Me Logo" class="logo">
-    
-    <div class="header-box">
-      <h1>Guess today's pet!</h1>
-      <input type="text" id="guessInput" placeholder="Type pet name..." list="petList">
-      <datalist id="petList"></datalist>
-      <button onclick="submitGuess()">Submit</button>
+  <div class="background-blur"></div>
+
+  <header>
+    <img src="https://i.postimg.cc/3NYDHc3N/Adopt-Me-Logo.webp" alt="Adopt Me Logo" class="main-logo" />
+  </header>
+
+  <main>
+    <div class="guess-section">
+      <div class="title-box">
+        <h1>Guess today's pet!</h1>
+        <input type="text" id="guessInput" placeholder="Type pet name..." autocomplete="off" />
+        <ul id="autocompleteList" class="autocomplete-list"></ul>
+      </div>
     </div>
 
-    <div class="category-labels">
-      <div class="label">Pet</div>
-      <div class="label">Rarity</div>
-      <div class="label">Released</div>
-      <div class="label">Color</div>
-      <div class="label">Obtained</div>
-      <div class="label">Egg?</div>
-      <div class="label">Exclusive?</div>
+    <div id="petDetailBox"></div>
+
+    <div class="hint-header">
+      <span>Pet</span>
+      <span>Rarity</span>
+      <span>Release</span>
+      <span>Colors</span>
+      <span>Obtained</span>
+      <span>Egg?</span>
+      <span>Exclusive?</span>
     </div>
 
-    <div id="feedback"></div>
+    <div id="feedbackContainer"></div>
 
     <div class="how-to">
-      <p onclick="toggleInstructions()">How to play</p>
-      <div id="instructions" class="hidden fade">
-        <p>Guess the Adopt Me! pet by typing its name. You’ll get hints based on rarity, release date, color, and more!</p>
-      </div>
-      <p class="credits">Made by <a href="https://github.com/moonlighterxxx" target="_blank">moonlighterxxx</a></p>
+      <p id="howToPlayToggle">How to play</p>
+      <div id="howToPlayPopup" class="popup">Guess the Adopt Me! pet based on clues: Rarity, Release Date, Colors, and more. Use hints to narrow it down!</div>
     </div>
-  </div>
+
+    <p class="credit">Made by <a href="https://github.com/moonlighterxxx" target="_blank">moonlighterxxx</a></p>
+  </main>
+
   <script src="script.js"></script>
 </body>
 </html>
