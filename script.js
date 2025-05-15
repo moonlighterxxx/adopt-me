@@ -1,11 +1,9 @@
-// script.js
-
 const pets = [
   {
     name: "Dog",
     image: "https://i.postimg.cc/FFVLxNxL/Dog.webp",
     rarity: "Common",
-    release: "June 15, 2019",
+    release: "2019",
     colors: ["beige"],
     obtained: "Starter Egg",
     egg: "Yes",
@@ -15,74 +13,123 @@ const pets = [
     name: "Dragon",
     image: "https://i.postimg.cc/5NH1YyNH/Dragon.webp",
     rarity: "Legendary",
-    release: "June 15, 2019",
+    release: "2020",
     colors: ["red", "black"],
-    obtained: "Pet Egg",
-    egg: "Yes",
-    exclusive: "No"
-  },
-  {
-    name: "Cat",
-    image: "https://i.postimg.cc/5NH1YyNH/Dragon.webp",
-    rarity: "Common",
-    release: "June 15, 2019",
-    colors: ["grey"],
-    obtained: "Pet Egg",
+    obtained: "Royal Egg",
     egg: "Yes",
     exclusive: "No"
   }
 ];
 
-const correctPet = pets[Math.floor(Math.random() * pets.length)];
-const feedbackContainer = document.getElementById("feedback");
-let guessCount = 0;
+const answer = pets[1]; // change daily if needed
+let guesses = [];
 
-function submitGuess() {
-  const input = document.getElementById("guessInput");
-  const guess = input.value.trim();
-  const guessedPet = pets.find(p => p.name.toLowerCase() === guess.toLowerCase());
+const guessInput = document.getElementById("guessInput");
+const feedbackContainer = document.getElementById("feedbackContainer");
+const autocompleteList = document.getElementById("autocompleteList");
+const petDetailBox = document.getElementById("petDetailBox");
 
-  if (!guessedPet) {
-    alert("That pet is not on the list!");
+document.getElementById("howToPlayToggle").onclick = () => {
+  const popup = document.getElementById("howToPlayPopup");
+  popup.style.display = popup.style.display === "block" ? "none" : "block";
+};
+
+guessInput.addEventListener("input", () => {
+  const val = guessInput.value.toLowerCase();
+  autocompleteList.innerHTML = "";
+  if (val.length === 0) {
+    autocompleteList.style.display = "none";
     return;
   }
+  const matches = pets.filter(p => p.name.toLowerCase().startsWith(val));
+  matches.forEach(p => {
+    const li = document.createElement("li");
+    li.innerHTML = `<img src="${p.image}" /> ${p.name}`;
+    li.onclick = () => {
+      guessInput.value = p.name;
+      autocompleteList.style.display = "none";
+      submitGuess();
+    };
+    autocompleteList.appendChild(li);
+  });
+  autocompleteList.style.display = matches.length ? "block" : "none";
+});
 
-  guessCount++;
+function submitGuess() {
+  const val = guessInput.value.trim().toLowerCase();
+  const guessedPet = pets.find(p => p.name.toLowerCase() === val);
+  if (!guessedPet) return;
 
-  const resultRow = document.createElement("div");
-  resultRow.className = "result-row";
+  guesses.unshift(guessedPet);
 
-  resultRow.innerHTML = `
-    <img src="${guessedPet.image}" alt="${guessedPet.name}" class="pet-image">
-    <div class="hint ${getHintColor(guessedPet.rarity, correctPet.rarity)}">${guessedPet.rarity}</div>
-    <div class="hint ${getHintColor(guessedPet.release, correctPet.release)}">${guessedPet.release}</div>
-    <div class="hint ${getColorHint(guessedPet.colors, correctPet.colors)}">${guessedPet.colors.join(", ")}</div>
-    <div class="hint ${getHintColor(guessedPet.obtained, correctPet.obtained)}">${guessedPet.obtained}</div>
-    <div class="hint ${getHintColor(guessedPet.egg, correctPet.egg)}">${guessedPet.egg}</div>
-    <div class="hint ${getHintColor(guessedPet.exclusive, correctPet.exclusive)}">${guessedPet.exclusive}</div>
+  const row = document.createElement("div");
+  row.className = "feedback-row";
+
+  const feedback = [
+    guessedPet.name,
+    guessedPet.rarity === answer.rarity ? "green" : "red",
+    guessedPet.release === answer.release ? "green" : "red",
+    colorMatch(guessedPet.colors, answer.colors),
+    guessedPet.obtained === answer.obtained ? "green" : "red",
+    guessedPet.egg === answer.egg ? "green" : "red",
+    guessedPet.exclusive === answer.exclusive ? "green" : "red"
+  ];
+
+  const colorsBox = document.createElement("div");
+  colorsBox.className = `feedback-box ${feedback[3].status}`;
+  guessedPet.colors.forEach(color => {
+    const swatch = document.createElement("div");
+    swatch.className = "color-swatch";
+    swatch.style.background = color;
+    swatch.setAttribute("data-color", color);
+    colorsBox.appendChild(swatch);
+  });
+
+  row.innerHTML = `
+    <div class="feedback-box"><img src="${guessedPet.image}" width="40" /></div>
+    <div class="feedback-box ${feedback[1]}">${guessedPet.rarity}</div>
+    <div class="feedback-box ${feedback[2]}">${guessedPet.release}</div>
+  `;
+  row.appendChild(colorsBox);
+  row.innerHTML += `
+    <div class="feedback-box ${feedback[4]}">${guessedPet.obtained}</div>
+    <div class="feedback-box ${feedback[5]}">${guessedPet.egg}</div>
+    <div class="feedback-box ${feedback[6]}">${guessedPet.exclusive}</div>
   `;
 
-  feedbackContainer.prepend(resultRow);
-  input.value = "";
+  feedbackContainer.prepend(row);
 
-  if (guessedPet.name === correctPet.name) {
-    setTimeout(() => {
-      alert(`You Win! You guessed today's pet in ${guessCount} tries!`);
-    }, 100);
+  if (guessedPet.name === answer.name) {
+    showWinPopup();
+    showCorrectPet(guessedPet);
   }
 }
 
-function getHintColor(guessValue, correctValue) {
-  if (guessValue === correctValue) return "green";
-  return "red";
+function showWinPopup() {
+  alert(`www.weblink says:\nYou Win! You guessed today's pet in ${guesses.length} tries!`);
 }
 
-function getColorHint(guessColors, correctColors) {
-  if (guessColors.every(color => correctColors.includes(color)) && guessColors.length === correctColors.length) {
-    return "green";
-  } else if (guessColors.some(color => correctColors.includes(color))) {
-    return "yellow";
-  } else {
-    return "red";
-  }
+function showCorrectPet(pet) {
+  petDetailBox.innerHTML = `
+    <div class="pet-card">
+      <img src="${pet.image}" />
+      <div class="pet-info">
+        <p><strong>Name:</strong> ${pet.name}</p>
+        <p><strong>Rarity:</strong> ${pet.rarity}</p>
+        <p><strong>Release:</strong> ${pet.release}</p>
+        <p><strong>Colors:</strong> ${pet.colors.join(", ")}</p>
+        <p><strong>Obtained:</strong> ${pet.obtained}</p>
+        <p><strong>Egg?</strong> ${pet.egg}</p>
+        <p><strong>Exclusive?</strong> ${pet.exclusive}</p>
+      </div>
+    </div>
+  `;
+}
+
+function colorMatch(guessColors, answerColors) {
+  const allMatch = guessColors.every(c => answerColors.includes(c)) && guessColors.length === answerColors.length;
+  const someMatch = guessColors.some(c => answerColors.includes(c));
+  return {
+    status: allMatch ? "green" : someMatch ? "yellow" : "red"
+  };
 }
